@@ -44,8 +44,8 @@
 
 ### Exercício
 
-Os detalhes sobre o exercício estão no arquivo Exercicio1.md no mesmo diretório desde Readme.
-Também se encontra uma coleção do Postman para Testes E2E, para correção do exercício.
+Os detalhes sobre o exercício estão no arquivo [Exercicio1.md](https://github.com/luigicfilho/BE-CS-008/blob/Aula1/Aula1/Exercicio1.md) no mesmo diretório desde Readme.
+Também se encontra uma coleção do Postman para [Testes E2E](https://github.com/luigicfilho/BE-CS-008/blob/Aula1/Aula1/API%20de%20Gerenciamento%20de%20Produtos.postman_collection.json), para correção do exercício.
 
 ### Tutorial
 1. Cria WebApi padrão (Minimal API)
