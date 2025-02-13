@@ -1,0 +1,587 @@
+{
+	"info": {
+		"_postman_id": "560c6961-f815-4eb2-9d10-75c2fd424470",
+		"name": "API de Gerenciamento de Produtos",
+		"description": "Postman Collection para fazer Testes de verificaçao da correta implementação da api do exercicio do curso BE-CS-008 PROGRAMAÇÃO WEB III (WEBAPI)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41985577"
+	},
+	"item": [
+		{
+			"name": "Listar Produtos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se o status code é 200 (OK)",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Verifica se a resposta é um array",
+							"pm.test(\"Response is an array\", function () {",
+							"    pm.expect(pm.response.json()).to.be.an('array');",
+							"});",
+							"",
+							"// Verifica se cada produto tem as propriedades esperadas",
+							"pm.test(\"Each product has required properties\", function () {",
+							"    const produtos = pm.response.json();",
+							"    produtos.forEach(produto => {",
+							"        pm.expect(produto).to.have.property('id');",
+							"        pm.expect(produto).to.have.property('nome');",
+							"        pm.expect(produto).to.have.property('descricao');",
+							"        pm.expect(produto).to.have.property('preco');",
+							"        pm.expect(produto).to.have.property('categoria');",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pré-requisição: Cria um produto antes de listar\r",
+							"const url = pm.collectionVariables.get(\"url\"); // Obtém o valor da variável de coleção 'url'\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    url: '${url}/api/produtos',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            nome: \"Produto Temporário\",\r",
+							"            descricao: \"Este produto será listado.\",\r",
+							"            preco: 100.00,\r",
+							"            categoria: \"Teste\"\r",
+							"        })\r",
+							"    }\r",
+							"}, function (err, response) {\r",
+							"    // Salva o ID do produto criado em uma variável de coleção\r",
+							"    const produtoCriado = response.json();\r",
+							"    pm.collectionVariables.set(\"produtoId\", produtoCriado.id);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/produtos",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"produtos"
+					]
+				},
+				"description": "Essa requisição retorna todos os produtos cadastrados."
+			},
+			"response": []
+		},
+		{
+			"name": "Obter Produto por ID (Sucesso)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se o status code é 200 (OK)",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Verifica se o produto retornado tem o ID correto",
+							"pm.test(\"Product ID is correct\", function () {",
+							"    const produto = pm.response.json();",
+							"    pm.expect(produto.id).to.eql(1);",
+							"});",
+							"",
+							"// Verifica se o produto tem todas as propriedades esperadas",
+							"pm.test(\"Product has required properties\", function () {",
+							"    const produto = pm.response.json();",
+							"    pm.expect(produto).to.have.property('nome');",
+							"    pm.expect(produto).to.have.property('descricao');",
+							"    pm.expect(produto).to.have.property('preco');",
+							"    pm.expect(produto).to.have.property('categoria');",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pré-requisição: Cria um produto antes de obter\r",
+							"const url = pm.collectionVariables.get(\"url\"); // Obtém o valor da variável de coleção 'url'\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    url: '${url}/api/produtos',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            nome: \"Produto Temporário\",\r",
+							"            descricao: \"Este produto será obtido.\",\r",
+							"            preco: 100.00,\r",
+							"            categoria: \"Teste\"\r",
+							"        })\r",
+							"    }\r",
+							"}, function (err, response) {\r",
+							"    // Salva o ID do produto criado em uma variável de coleção\r",
+							"    const produtoCriado = response.json();\r",
+							"    pm.collectionVariables.set(\"produtoId\", produtoCriado.id);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/produtos/{{produtoId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"produtos",
+						"{{produtoId}}"
+					]
+				},
+				"description": "Essa requisição retorna o produto cadastrado com o Id enviado."
+			},
+			"response": []
+		},
+		{
+			"name": "Obter Produto por ID (Erro - Produto não existe)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se o status code é 404 (Not Found)",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"// Verifica se a mensagem de erro está correta",
+							"pm.test(\"Error message is correct\", function () {",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.message).to.eql(\"Produto não encontrado.\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/produtos/999",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"produtos",
+						"999"
+					]
+				},
+				"description": "Essa requisição deve falhar, pois o produto não podemos obter um produto que não existe."
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Produto (Sucesso)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se o status code é 201 (Created)",
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"// Verifica se o produto foi criado com os dados corretos",
+							"pm.test(\"Product created with correct data\", function () {",
+							"    const produto = pm.response.json();",
+							"    pm.expect(produto.nome).to.eql(\"Smartphone XYZ\");",
+							"    pm.expect(produto.descricao).to.eql(\"Um smartphone avançado com câmera de 48MP.\");",
+							"    pm.expect(produto.preco).to.eql(1999.99);",
+							"    pm.expect(produto.categoria).to.eql(\"Eletrônicos\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"Smartphone XYZ\",\n  \"descricao\": \"Um smartphone avançado com câmera de 48MP.\",\n  \"preco\": 1999.99,\n  \"categoria\": \"Eletrônicos\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/produtos",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"produtos"
+					]
+				},
+				"description": "Essa requisição cria um novo produto com base no corpo enviado."
+			},
+			"response": []
+		},
+		{
+			"name": "Criar Produto (Erro - Dados inválidos)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se o status code é 422 (Unprocessable Entity)",
+							"pm.test(\"Status code is 422\", function () {",
+							"    pm.response.to.have.status(422);",
+							"});",
+							"",
+							"// Verifica se a mensagem de erro está correta",
+							"pm.test(\"Error message is correct\", function () {",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.message).to.eql(\"Dados inválidos.\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"\",\n  \"descricao\": \"\",\n  \"preco\": -1,\n  \"categoria\": \"\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/produtos",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"produtos"
+					]
+				},
+				"description": "Essa requisição deve falhar, pois não podemos criar um produto com dados inválidos."
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Produto (Sucesso)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se o status code é 200 (OK)",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Verifica se o produto foi atualizado corretamente",
+							"pm.test(\"Product updated with correct data\", function () {",
+							"    const produto = pm.response.json();",
+							"    pm.expect(produto.descricao).to.eql(\"Um smartphone avançado com câmera de 48MP e bateria de 5000mAh.\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pré-requisição: Cria um produto antes de atualizar\r",
+							"const url = pm.collectionVariables.get(\"url\"); // Obtém o valor da variável de coleção 'url'\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    url: '${url}/api/produtos',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            nome: \"Produto Temporário\",\r",
+							"            descricao: \"Este produto será atualizado.\",\r",
+							"            preco: 100.00,\r",
+							"            categoria: \"Teste\"\r",
+							"        })\r",
+							"    }\r",
+							"}, function (err, response) {\r",
+							"    // Salva o ID do produto criado em uma variável de coleção\r",
+							"    const produtoCriado = response.json();\r",
+							"    pm.collectionVariables.set(\"produtoId\", produtoCriado.id);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"Smartphone XYZ\",\n  \"descricao\": \"Um smartphone avançado com câmera de 48MP e bateria de 5000mAh.\",\n  \"preco\": 1999.99,\n  \"categoria\": \"Eletrônicos\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/produtos/{{produtoId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"produtos",
+						"{{produtoId}}"
+					]
+				},
+				"description": "Essa requisição atualiza o produto indicado pelo Id com as informações presentes no corpo da requisição."
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Produto (Erro - Produto não existe)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se o status code é 404 (Not Found)",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"// Verifica se a mensagem de erro está correta",
+							"pm.test(\"Error message is correct\", function () {",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.message).to.eql(\"Produto não encontrado.\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"nome\": \"Smartphone XYZ\",\n  \"descricao\": \"Um smartphone avançado com câmera de 48MP e bateria de 5000mAh.\",\n  \"preco\": 1999.99,\n  \"categoria\": \"Eletrônicos\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/api/produtos/999",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"produtos",
+						"999"
+					]
+				},
+				"description": "Essa requisição deve falhar, pois não podemos atualizar um produto que não existe."
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Produto (Sucesso)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se o status code é 204 (No Content)",
+							"pm.test(\"Status code is 204\", function () {",
+							"    pm.response.to.have.status(204);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"// Pré-requisição: Cria um produto antes de deletar\r",
+							"const url = pm.collectionVariables.get(\"url\"); // Obtém o valor da variável de coleção 'url'\r",
+							"\r",
+							"pm.sendRequest({\r",
+							"    url: '${url}/api/produtos',\r",
+							"    method: 'POST',\r",
+							"    header: {\r",
+							"        'Content-Type': 'application/json'\r",
+							"    },\r",
+							"    body: {\r",
+							"        mode: 'raw',\r",
+							"        raw: JSON.stringify({\r",
+							"            nome: \"Produto Temporário\",\r",
+							"            descricao: \"Este produto será deletado.\",\r",
+							"            preco: 100.00,\r",
+							"            categoria: \"Teste\"\r",
+							"        })\r",
+							"    }\r",
+							"}, function (err, response) {\r",
+							"    // Salva o ID do produto criado em uma variável de coleção\r",
+							"    const produtoCriado = response.json();\r",
+							"    pm.collectionVariables.set(\"produtoId\", produtoCriado.id);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/produtos/{{produtoId}}",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"produtos",
+						"{{produtoId}}"
+					]
+				},
+				"description": "Essa requisição remove o produto indicado pelo Id informado."
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Produto (Erro - Produto não existe)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Verifica se o status code é 404 (Not Found)",
+							"pm.test(\"Status code is 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"// Verifica se a mensagem de erro está correta",
+							"pm.test(\"Error message is correct\", function () {",
+							"    const response = pm.response.json();",
+							"    pm.expect(response.message).to.eql(\"Produto não encontrado.\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/api/produtos/999",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"api",
+						"produtos",
+						"999"
+					]
+				},
+				"description": "Essa requisição deve falhar, pois não podemos deletar um produto que não existe."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "{{url}}",
+			"value": "http://localhost:5000",
+			"type": "string"
+		}
+	]
+}

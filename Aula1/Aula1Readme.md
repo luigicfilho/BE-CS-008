@@ -42,6 +42,11 @@
     dotnet run 
 ```
 
+### Exercício
+
+Os detalhes sobre o exercício estão no arquivo Exercicio1.md no mesmo diretório desde Readme.
+Também se encontra uma coleção do Postman para Testes E2E, para correção do exercício.
+
 ### Tutorial
 1. Cria WebApi padrão (Minimal API)
 ```cs
