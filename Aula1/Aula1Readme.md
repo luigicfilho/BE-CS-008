@@ -221,6 +221,6 @@
 23. Teste os endpoints, obtendo a lista (vazia), crie um novo filme, obtenha novamente  para receber o item criado.
 
 ###### Links
-- https://learn.microsoft.com/en-us/aspnet/core/web-api/action-return-types?view=aspnetcore-9.0&viewFallbackFrom=aspnetcore-2.2
-- https://www.iana.org/assignments/media-types/media-types.xhtml
-- https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html
+- [Documentação Mozilla - PT](https://developer.mozilla.org/pt-BR/docs/Web/HTTP)
+- [Lista de tipos de midia - IANA - EN](https://www.iana.org/assignments/media-types/media-types.xhtml)
+- [Post do Uncle Bob sobre Arquitetura Limpa - EN](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
